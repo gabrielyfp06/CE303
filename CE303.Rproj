@@ -1,13 +1,35 @@
-Version: 1.0
-
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
-
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
-
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+### CRIANDO UM APP NO SHINY
+require(shiny)
+#DEFININDO INTERFACE DE USUÁRIO
+ui<- fluidPage(
+  #PAINEL DE TÍTULO DA PÁGINA
+  titlePanel(""),
+  #TIPO DE LAYOUT
+  sidebarLayout(
+    #PAINEL LATERAL
+    sidebarPanel("Insira seus dados Pessoais",
+                 textInput(inputId="nome",label="Nome:",value="João"),
+                 textInput(inputId="peso",label="Peso:",value="85"),
+                 textInput(inputId="altura",label="Altura:",value="1.70")
+    ),
+    #PAINEL PRINCIPAL
+    mainPanel("Resultado:",
+              textOutput("onome"),
+              textOutput("opeso"),
+              textOutput("aaltura"),
+              h4(textOutput("imc"))
+    )
+  )
+)
+#DEFININDO FUNÇÕES DO R
+server<-function(input,output){
+  #CRIANDO OUTPUTS
+  output$onome<-renderText(input$nome)
+  output$opeso<-renderText(input$peso)
+  output$aaltura<-renderText(input$altura)
+  output$imc<-renderText({
+    aux=round(as.numeric(input$peso)/(as.numeric(input$altura)^2),2)
+    paste("O IMC é", aux, ".")
+  })
+}
+shinyApp(ui,server)
